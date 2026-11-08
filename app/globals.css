@@ -1,26 +1,161 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
+
+/* ================================
+   DEVPORTFOLIO - PIXEL SPIDER THEME
+================================ */
+
+@theme {
+  --font-pixel: "Press Start 2P", monospace;
+  --font-mono: "Roboto Mono", monospace;
+}
+
+/* BASE COLORS */
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f4;
+  --secondary-foreground: #111111;
+  --muted: #f4f4f4;
+  --muted-foreground: #737373;
+  --accent: #eeeeee;
+  --accent-foreground: #111111;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #111111;
+  --radius: 0rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* GLOBAL RESET */
+
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto Mono", monospace;
+  margin: 0;
+}
+
+/* HEADINGS */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: #111111;
+}
+
+/* PIXEL TEXT */
+
+.pixel-text {
+  font-family: "Press Start 2P", monospace;
+  line-height: 1.8;
+  letter-spacing: -1px;
+}
+
+/* PIXEL LOGO */
+
+.pixel-wordmark {
+  font-family: "Press Start 2P", monospace;
+  font-size: 13px;
+  letter-spacing: -1px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+/* PIXEL BORDERS */
+
+.pixel-border {
+  border: 2px solid #111111;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #111111;
+}
+
+/* PIXEL BUTTONS */
+
+.pixel-button {
+  border: 2px solid #111111;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #111111;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pixel-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #111111;
+}
+
+/* PIXEL BACKGROUND */
+
+.pixel-background {
+  background-color: #ffffff;
+  background-image: radial-gradient(#d4d4d4 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* SPIDER WEB DECORATION */
+
+.web-pattern {
+  background-image:
+    repeating-radial-gradient(
+      circle at 100% 0%,
+      transparent 0,
+      transparent 28px,
+      rgba(0, 0, 0, 0.08) 29px,
+      transparent 30px
+    );
+}
+
+/* TEXT SELECTION */
+
+::selection {
+  background: #111111;
+  color: #ffffff;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* LINKS */
+
+a {
+  text-decoration: none;
+}
+
+/* IMAGES */
+
+img {
+  max-width: 100%;
 }
