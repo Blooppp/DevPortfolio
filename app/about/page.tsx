@@ -17,7 +17,9 @@ export default function About() {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">About Me</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          About Me
+        </h1>
         <p className="text-muted-foreground mt-1">
           A bit about my background, passion, and technical skillset.
         </p>
@@ -27,6 +29,7 @@ export default function About() {
         <CardHeader>
           <CardTitle>My Story</CardTitle>
         </CardHeader>
+
         <CardContent className="space-y-4 text-muted-foreground leading-relaxed">
           <p>
             My name is Julius Hale Alcana, and I am an Information Technology
@@ -36,6 +39,7 @@ export default function About() {
             something new. I may still have a lot to learn, but I am willing
             to put in the time and effort to improve my skills.
           </p>
+
           <p>
             Beyond learning how to code, I see technology as an opportunity
             to build a better future for myself and my family. One of my
@@ -52,10 +56,15 @@ export default function About() {
         <CardHeader>
           <CardTitle>Skills & Technologies</CardTitle>
         </CardHeader>
+
         <CardContent>
           <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (
-              <Badge key={skill} variant="secondary" className="text-sm px-3 py-1">
+              <Badge
+                key={skill}
+                variant="secondary"
+                className="text-sm px-3 py-1"
+              >
                 {skill}
               </Badge>
             ))}
