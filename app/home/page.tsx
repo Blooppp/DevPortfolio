@@ -1,88 +1,130 @@
+
 "use client";
 
 import { useState, useRef, type MouseEvent } from "react";
 
 /**
- * Spider-Man inspired homepage (original artwork, no official logos).
+ * Pokémon-inspired homepage with original styling and interactive effects.
  */
 
-type Web = {
+type Burst = {
   id: number;
   x: number;
   y: number;
-  w: number;
-  h: number;
 };
 
-const powers = [
+const abilities = [
   {
-    title: "Wall-crawling",
-    text: "Cling to any surface, from glass towers to brick fire escapes.",
+    title: "Curiosity",
+    text: "Always exploring new ideas, technologies, and opportunities to learn.",
     tilt: "-1.5deg",
+    type: "electric",
   },
   {
-    title: "Spider-sense",
-    text: "A tingle at the back of your skull, one second before trouble.",
+    title: "Problem-solving",
+    text: "Taking on challenges, finding solutions, and learning from mistakes.",
     tilt: "1deg",
+    type: "water",
   },
   {
-    title: "Web-slinging",
-    text: "Swing across the city on lines you built yourself.",
+    title: "Creativity",
+    text: "Turning ideas into projects through experimentation and imagination.",
     tilt: "-0.5deg",
+    type: "grass",
   },
   {
-    title: "Quick quips",
-    text: "Banter that keeps everyone off balance, including you.",
+    title: "Continuous Growth",
+    text: "Improving every day, gaining experience, and unlocking new skills.",
     tilt: "1.5deg",
+    type: "fire",
   },
 ];
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Barlow:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap');
 
-.sp {
-  --red: #d8232a;
-  --blue: #14246b;
-  --night: #0a1240;
-  --web: #f4f5fb;
-  --caption: #ffd23f;
-  font-family: 'Barlow', system-ui, sans-serif;
-  color: var(--web);
-  background: var(--night);
-  line-height: 1.55;
+.pk {
+  --red: #e53935;
+  --yellow: #ffcb05;
+  --blue: #3b82c4;
+  --green: #65a85b;
+  --cream: #fffdf5;
+  --dark: #202020;
+  --muted: #686868;
+
+  font-family: 'Nunito', system-ui, sans-serif;
+  color: var(--dark);
+  background: var(--cream);
+  line-height: 1.6;
+  overflow: hidden;
 }
 
-.sp *, .sp *::before, .sp *::after {
+.pk *, .pk *::before, .pk *::after {
   box-sizing: border-box;
 }
 
-.sp h1, .sp h2, .sp h3 {
-  font-family: 'Bangers', Impact, sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  line-height: 1;
+.pk h1, .pk h2, .pk h3 {
+  font-weight: 900;
+  line-height: 1.2;
   margin: 0;
 }
 
-.sp-nav {
+.pk-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
   padding: 18px clamp(16px, 5vw, 56px);
   background: var(--red);
-  border-bottom: 4px solid var(--night);
+  color: white;
+  border-bottom: 4px solid var(--dark);
   position: relative;
   z-index: 3;
 }
 
-.sp-nav strong {
-  font-family: 'Bangers', Impact, sans-serif;
-  font-size: 1.7rem;
-  letter-spacing: 0.05em;
-  font-weight: 400;
+.pk-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.sp-nav ul {
+.pk-logo {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--dark);
+  border-radius: 50%;
+  background: linear-gradient(
+    to bottom,
+    white 0%,
+    white 44%,
+    var(--dark) 44%,
+    var(--dark) 56%,
+    var(--red) 56%,
+    var(--red) 100%
+  );
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pk-logo::after {
+  content: '';
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 3px solid var(--dark);
+  border-radius: 50%;
+  background: white;
+  top: 8px;
+  left: 8px;
+}
+
+.pk-nav strong {
+  font-family: 'Press Start 2P', monospace;
+  font-size: .8rem;
+  line-height: 1.6;
+}
+
+.pk-nav ul {
   display: flex;
   gap: clamp(12px, 3vw, 32px);
   list-style: none;
@@ -90,87 +132,131 @@ const css = `
   padding: 0;
 }
 
-.sp-nav a {
-  color: var(--web);
+.pk-nav a {
+  color: white;
   text-decoration: none;
-  font-weight: 600;
+  font-size: .9rem;
+  font-weight: 900;
 }
 
-.sp-nav a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.pk-nav a:hover {
+  color: var(--yellow);
 }
 
-.sp a:focus-visible,
-.sp button:focus-visible,
-.sp input:focus-visible {
-  outline: 3px solid var(--caption);
-  outline-offset: 3px;
+.pk a:focus-visible,
+.pk button:focus-visible,
+.pk input:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 4px;
 }
 
-.sp-hero {
+.pk-hero {
   position: relative;
   min-height: 86vh;
   overflow: hidden;
   display: grid;
   align-content: center;
-  padding: clamp(32px, 8vw, 96px) clamp(16px, 5vw, 56px);
+  padding: clamp(40px, 8vw, 96px) clamp(16px, 5vw, 56px);
   cursor: crosshair;
   background:
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,.12) 1.5px, transparent 1.6px) 0 0 / 14px 14px,
-    linear-gradient(180deg, var(--blue) 0%, var(--night) 100%);
+    radial-gradient(circle, rgba(229,57,53,.10) 2px, transparent 2.5px) 0 0 / 25px 25px,
+    linear-gradient(135deg, #fffdf5 0%, #fff5cc 55%, #ffe5d8 100%);
 }
 
-.sp-skyline {
+.pk-hero::before {
+  content: '';
   position: absolute;
-  inset: auto 0 0 0;
-  height: 34%;
-  background: #050a26;
-  clip-path: polygon(
-    0 100%, 0 55%, 6% 55%, 6% 30%, 12% 30%,
-    12% 62%, 20% 62%, 20% 20%, 27% 20%, 27% 48%,
-    35% 48%, 35% 36%, 43% 36%, 43% 66%, 52% 66%,
-    52% 14%, 59% 14%, 59% 52%, 68% 52%, 68% 30%,
-    76% 30%, 76% 60%, 85% 60%, 85% 24%, 92% 24%,
-    92% 50%, 100% 50%, 100% 100%
+  width: 520px;
+  height: 520px;
+  border: 35px solid rgba(229,57,53,.08);
+  border-radius: 50%;
+  right: -150px;
+  top: -130px;
+}
+
+.pk-hero::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 25px solid rgba(255,203,5,.15);
+  border-radius: 50%;
+  right: 10%;
+  bottom: -180px;
+}
+
+.pk-pokeball {
+  position: absolute;
+  right: clamp(25px, 10vw, 150px);
+  top: 50%;
+  transform: translateY(-50%) rotate(-18deg);
+  width: clamp(150px, 25vw, 330px);
+  aspect-ratio: 1;
+  border: 12px solid var(--dark);
+  border-radius: 50%;
+  background: linear-gradient(
+    to bottom,
+    var(--red) 0%,
+    var(--red) 46%,
+    var(--dark) 46%,
+    var(--dark) 54%,
+    white 54%,
+    white 100%
   );
-}
-
-.sp-webcorner {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: min(46vw, 420px);
-  opacity: .5;
+  box-shadow: 12px 14px 0 rgba(32,32,32,.13);
+  opacity: .16;
   pointer-events: none;
 }
 
-.sp-hero-copy {
+.pk-pokeball::after {
+  content: '';
+  position: absolute;
+  width: 28%;
+  aspect-ratio: 1;
+  border: 10px solid var(--dark);
+  border-radius: 50%;
+  background: white;
+  top: 36%;
+  left: 36%;
+}
+
+.pk-hero-copy {
   position: relative;
   z-index: 2;
   max-width: 760px;
   pointer-events: none;
 }
 
-.sp-hero h1 {
-  font-size: clamp(3.4rem, 11vw, 8rem);
-  text-shadow: 5px 5px 0 var(--red);
+.pk-label {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 1.2vw, 11px);
+  line-height: 2;
+  color: var(--red);
+  margin-bottom: 22px;
 }
 
-.sp-caption {
+.pk-hero h1 {
+  max-width: 750px;
+  font-size: clamp(2.7rem, 8vw, 6.5rem);
+  color: var(--dark);
+  text-shadow: 4px 4px 0 var(--yellow);
+}
+
+.pk-caption {
   display: inline-block;
-  background: var(--caption);
-  color: #1b1300;
-  padding: 8px 14px;
+  background: white;
+  color: var(--dark);
+  padding: 12px 16px;
   margin-top: 28px;
-  border: 3px solid #1b1300;
-  box-shadow: 5px 5px 0 #1b1300;
-  font-weight: 600;
-  max-width: 34ch;
+  border: 3px solid var(--dark);
+  box-shadow: 5px 5px 0 var(--dark);
+  font-weight: 800;
+  max-width: 42ch;
   transform: rotate(-1deg);
 }
 
-.sp-actions {
+.pk-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
@@ -178,40 +264,42 @@ const css = `
   pointer-events: auto;
 }
 
-.sp-btn {
-  font-family: 'Bangers', Impact, sans-serif;
-  letter-spacing: .05em;
-  font-size: 1.35rem;
-  padding: 12px 26px;
-  border: 3px solid var(--web);
+.pk-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: .7rem;
+  line-height: 1.8;
+  padding: 13px 20px;
+  border: 3px solid var(--dark);
   background: var(--red);
-  color: var(--web);
+  color: white;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  transition: transform .12s, box-shadow .12s;
-  box-shadow: 4px 4px 0 var(--web);
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 4px 4px 0 var(--dark);
 }
 
-.sp-btn:hover {
+.pk-btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 var(--web);
+  box-shadow: 7px 7px 0 var(--dark);
 }
 
-.sp-btn.ghost {
-  background: transparent;
+.pk-btn.ghost {
+  background: white;
+  color: var(--dark);
 }
 
-.sp-hint {
+.pk-hint {
   position: absolute;
   left: clamp(16px, 5vw, 56px);
-  bottom: 14px;
+  bottom: 18px;
   z-index: 2;
-  font-size: .95rem;
-  opacity: .8;
+  font-size: .85rem;
+  font-weight: 800;
+  color: var(--muted);
 }
 
-.sp-svg {
+.pk-bursts {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -220,291 +308,389 @@ const css = `
   z-index: 1;
 }
 
-.sp-line {
-  stroke: var(--web);
-  stroke-width: 2.5;
-  fill: none;
+.pk-burst {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pokemonBurst .8s ease-out forwards;
+}
+
+.pk-burst circle {
+  fill: var(--yellow);
+  stroke: var(--dark);
+  stroke-width: 3;
+}
+
+.pk-burst path {
+  stroke: var(--red);
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: var(--len);
-  stroke-dashoffset: var(--len);
-  animation: thwip .35s ease-out forwards, fade 1.6s .9s forwards;
+  fill: none;
 }
 
-@keyframes thwip {
-  to { stroke-dashoffset: 0; }
+@keyframes pokemonBurst {
+  0% {
+    opacity: 1;
+    transform: scale(.2) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8) rotate(90deg);
+  }
 }
 
-@keyframes fade {
-  to { opacity: 0; }
-}
-
-.sp-section {
+.pk-section {
   padding: clamp(48px, 8vw, 96px) clamp(16px, 5vw, 56px);
 }
 
-.sp-section h2 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  margin-bottom: 36px;
+.pk-section h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 14px;
 }
 
-.sp-panels {
+.pk-section-intro {
+  color: var(--muted);
+  margin: 0 0 36px;
+  max-width: 55ch;
+}
+
+.pk-panels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 28px;
   max-width: 1100px;
 }
 
-.sp-panel {
-  background: var(--web);
-  color: var(--night);
-  padding: 22px;
-  border: 4px solid #000;
-  box-shadow: 8px 8px 0 var(--red);
+.pk-panel {
+  background: white;
+  color: var(--dark);
+  padding: 24px;
+  border: 3px solid var(--dark);
+  box-shadow: 7px 7px 0 var(--yellow);
   transform: rotate(var(--tilt));
+  transition: transform .2s, box-shadow .2s;
 }
 
-.sp-panel h3 {
-  font-size: 1.9rem;
-  color: var(--red);
-  margin-bottom: 10px;
+.pk-panel:hover {
+  transform: translateY(-5px) rotate(0deg);
+  box-shadow: 10px 10px 0 var(--red);
 }
 
-.sp-panel p {
+.pk-panel h3 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.pk-panel p {
   margin: 0;
-  max-width: 32ch;
+  color: var(--muted);
+  font-size: .95rem;
 }
 
-.sp-suit {
+.pk-type {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-bottom: 16px;
+  border: 2px solid var(--dark);
+  border-radius: 5px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+}
+
+.pk-type.electric {
+  background: var(--yellow);
+}
+
+.pk-type.water {
+  background: #a9d7f5;
+}
+
+.pk-type.grass {
+  background: #b9dfa9;
+}
+
+.pk-type.fire {
+  background: #ffc49d;
+}
+
+.pk-adventure {
   background: var(--red);
-  color: var(--web);
-  border-top: 6px solid #000;
-  border-bottom: 6px solid #000;
+  color: white;
+  border-top: 6px solid var(--dark);
+  border-bottom: 6px solid var(--dark);
 }
 
-.sp-suit form {
+.pk-adventure h2 {
+  text-shadow: 3px 3px 0 var(--dark);
+}
+
+.pk-adventure form {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   max-width: 560px;
 }
 
-.sp-suit input {
+.pk-adventure input {
   flex: 1 1 220px;
   padding: 13px 14px;
   font: inherit;
-  border: 3px solid #000;
-  background: var(--web);
-  color: var(--night);
+  font-weight: 700;
+  border: 3px solid var(--dark);
+  background: white;
+  color: var(--dark);
 }
 
-.sp-suit .sp-btn {
-  background: var(--night);
-  box-shadow: 4px 4px 0 #000;
-  border-color: #000;
+.pk-adventure .pk-btn {
+  background: var(--yellow);
+  color: var(--dark);
+  box-shadow: 4px 4px 0 var(--dark);
 }
 
-.sp-suit p {
+.pk-adventure p {
   max-width: 52ch;
   margin: 0 0 24px;
 }
 
-.sp footer {
+.pk footer {
   padding: 28px clamp(16px, 5vw, 56px);
-  font-size: .9rem;
-  opacity: .75;
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  border-top: 2px solid #e8dcae;
+}
+
+@media (max-width: 600px) {
+  .pk-nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pk-nav ul {
+    gap: 20px;
+  }
+
+  .pk-hero {
+    min-height: 80vh;
+  }
+
+  .pk-pokeball {
+    right: -70px;
+    top: 18%;
+    transform: none;
+  }
+
+  .pk-hero h1 {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .pk-hint {
+    font-size: .75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sp-line {
+  .pk-burst {
     animation: none;
-    stroke-dashoffset: 0;
-    opacity: .8;
+    opacity: 0;
   }
 
-  .sp-btn {
+  .pk-btn,
+  .pk-panel {
     transition: none;
   }
 }
 `;
 
 export default function Homepage() {
-  const [webs, setWebs] = useState<Web[]>([]);
+  const [bursts, setBursts] = useState<Burst[]>([]);
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const nextId = useRef(0);
 
-  function shoot(e: MouseEvent<HTMLElement>) {
+  function releaseEnergy(e: MouseEvent<HTMLElement>) {
     const rect = heroRef.current?.getBoundingClientRect();
 
     if (!rect) return;
 
     const id = nextId.current++;
 
-    const web: Web = {
+    const burst: Burst = {
       id,
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
-      w: rect.width,
-      h: rect.height,
     };
 
-    setWebs((prev) => [...prev.slice(-5), web]);
+    setBursts((prev) => [...prev.slice(-5), burst]);
 
     window.setTimeout(() => {
-      setWebs((prev) => prev.filter((w) => w.id !== id));
-    }, 2600);
+      setBursts((prev) => prev.filter((item) => item.id !== id));
+    }, 900);
   }
 
   return (
-    <div className="sp">
+    <div className="pk">
       <style>{css}</style>
 
-      <nav className="sp-nav" aria-label="Main">
-        <strong>Web &amp; Wall</strong>
+      {/* NAVIGATION */}
+
+      <nav className="pk-nav" aria-label="Main">
+
+        <div className="pk-brand">
+          <div className="pk-logo" aria-hidden="true" />
+          <strong>POKÉMON TRAINER</strong>
+        </div>
 
         <ul>
           <li>
-            <a href="#powers">Powers</a>
+            <a href="#trainer-skills">Trainer Skills</a>
           </li>
           <li>
-            <a href="#suit-up">Suit up</a>
+            <a href="#join-adventure">Adventure</a>
           </li>
         </ul>
+
       </nav>
 
+      {/* HERO SECTION */}
+
       <header
-        className="sp-hero"
+        className="pk-hero"
         ref={heroRef}
-        onClick={shoot}
+        onClick={releaseEnergy}
       >
-        <svg
-          className="sp-webcorner"
-          viewBox="0 0 200 200"
-          fill="none"
-          stroke="#f4f5fb"
-          strokeWidth="1.2"
-          aria-hidden="true"
-        >
-          {[0, 18, 36, 54, 72, 90].map((a) => (
-            <line
-              key={a}
-              x1="200"
-              y1="0"
-              x2={200 - 200 * Math.cos((a * Math.PI) / 180)}
-              y2={200 * Math.sin((a * Math.PI) / 180)}
-            />
-          ))}
 
-          {[40, 80, 120, 160, 200].map((r) => (
-            <path
-              key={r}
-              d={`M ${200 - r} 0 ${[18, 36, 54, 72, 90]
-                .map(
-                  (a) =>
-                    `Q ${200 - r * 0.9 * Math.cos(((a - 9) * Math.PI) / 180)} ${
-                      r * 0.9 * Math.sin(((a - 9) * Math.PI) / 180)
-                    } ${200 - r * Math.cos((a * Math.PI) / 180)} ${
-                      r * Math.sin((a * Math.PI) / 180)
-                    }`
-                )
-                .join(" ")}`}
-            />
-          ))}
-        </svg>
-
-        <div className="sp-skyline" aria-hidden="true" />
+        <div className="pk-pokeball" aria-hidden="true" />
 
         <svg
-          className="sp-svg"
+          className="pk-bursts"
           viewBox={`0 0 ${heroRef.current?.clientWidth ?? 1000} ${
             heroRef.current?.clientHeight ?? 700
           }`}
+          preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {webs.map((w) => {
-            const sx = 24;
-            const sy = w.h - 24;
+          {bursts.map((burst) => (
+            <g
+              key={burst.id}
+              className="pk-burst"
+              transform={`translate(${burst.x} ${burst.y})`}
+            >
+              <circle r="13" />
 
-            const len = Math.ceil(
-              Math.hypot(w.x - sx, w.y - sy) * 1.1
-            );
+              <path d="M 0 -35 V -22 M 0 22 V 35 M -35 0 H -22 M 22 0 H 35 M -25 -25 L -16 -16 M 16 16 L 25 25 M 25 -25 L 16 -16 M -16 16 L -25 25" />
 
-            return (
-              <path
-                key={w.id}
-                className="sp-line"
-                style={{ ["--len" as string]: len }}
-                d={`M ${sx} ${sy} Q ${(sx + w.x) / 2} ${
-                  Math.min(sy, w.y) - 60
-                } ${w.x} ${w.y}`}
-              />
-            );
-          })}
+            </g>
+          ))}
         </svg>
 
-        <div className="sp-hero-copy">
-          <h1>Your friendly neighborhood hero</h1>
+        <div className="pk-hero-copy">
 
-          <p className="sp-caption">
-            Rent is due, the bridge is stuck, and somebody needs a rescue by
-            3 p.m.
+          <p className="pk-label">
+            WELCOME, TRAINER!
           </p>
 
-          <div className="sp-actions">
+          <h1>
+            YOUR NEXT ADVENTURE STARTS HERE.
+          </h1>
+
+          <p className="pk-caption">
+            Every great trainer starts somewhere. Explore my journey,
+            discover my skills, and see what I'm learning along the way.
+          </p>
+
+          <div className="pk-actions">
+
             <a
-              className="sp-btn"
-              href="#suit-up"
+              className="pk-btn"
+              href="#trainer-skills"
               onClick={(e) => e.stopPropagation()}
             >
-              Join the swing
+              EXPLORE
             </a>
 
             <a
-              className="sp-btn ghost"
-              href="#powers"
+              className="pk-btn ghost"
+              href="#join-adventure"
               onClick={(e) => e.stopPropagation()}
             >
-              See the powers
+              GET IN TOUCH
             </a>
+
           </div>
+
         </div>
 
-        <p className="sp-hint">
-          Click anywhere to shoot a web.
+        <p className="pk-hint">
+          Click anywhere to discover a little Pokémon energy!
         </p>
+
       </header>
 
-      <section className="sp-section" id="powers">
-        <h2>What you can do</h2>
+      {/* TRAINER SKILLS */}
 
-        <div className="sp-panels">
-          {powers.map((p) => (
+      <section className="pk-section" id="trainer-skills">
+
+        <p className="pk-label">
+          TRAINER PROFILE
+        </p>
+
+        <h2>
+          WHAT'S IN MY TOOLKIT?
+        </h2>
+
+        <p className="pk-section-intro">
+          Skills and qualities that help me grow as a student,
+          developer, and aspiring IT professional.
+        </p>
+
+        <div className="pk-panels">
+
+          {abilities.map((ability) => (
             <article
-              className="sp-panel"
-              key={p.title}
-              style={{ ["--tilt" as string]: p.tilt }}
+              className="pk-panel"
+              key={ability.title}
+              style={{ ["--tilt" as string]: ability.tilt }}
             >
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
+
+              <span className={`pk-type ${ability.type}`}>
+                {ability.type.toUpperCase()}
+              </span>
+
+              <h3>{ability.title}</h3>
+
+              <p>{ability.text}</p>
+
             </article>
           ))}
+
         </div>
+
       </section>
 
-      <section className="sp-section sp-suit" id="suit-up">
-        <h2>Suit up</h2>
+      {/* JOIN THE ADVENTURE */}
+
+      <section className="pk-section pk-adventure" id="join-adventure">
+
+        <p className="pk-label" style={{ color: "white" }}>
+          YOUR JOURNEY CONTINUES
+        </p>
+
+        <h2>
+          JOIN THE ADVENTURE
+        </h2>
 
         <p>
-          Get one email a week with new routes, city stories, and swing-day
-          meetups.
+          Have a project idea or want to connect? Leave your email
+          and let's start a new adventure.
         </p>
 
         {joined ? (
           <p role="status">
             <strong>
-              You're in. Check your inbox for a welcome message.
+              Thanks for joining the adventure!
             </strong>
           </p>
         ) : (
@@ -517,6 +703,7 @@ export default function Homepage() {
               }
             }}
           >
+
             <input
               type="email"
               required
@@ -526,17 +713,22 @@ export default function Homepage() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <button className="sp-btn" type="submit">
-              Join
+            <button className="pk-btn" type="submit">
+              LET'S GO!
             </button>
+
           </form>
         )}
+
       </section>
 
+      {/* FOOTER */}
+
       <footer>
-        An unofficial fan-style homepage with original artwork. Not
-        affiliated with Marvel or Sony.
+        Pokémon-inspired personal portfolio design. Pokémon and related
+        characters are trademarks of their respective owners.
       </footer>
+
     </div>
   );
 }
